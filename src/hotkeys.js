@@ -606,20 +606,22 @@
           // split and trim the hotkeys string into array
           allowIn = typeof attrs.hotkeyAllowIn === "string" ? attrs.hotkeyAllowIn.split(/[\s,]+/) : [];
 
-          keys.push(hotkey);
-
-          hotkeys.add({
+          keys.push(hotkeys.add({
             combo: hotkey,
             description: attrs.hotkeyDescription,
             callback: func,
             action: attrs.hotkeyAction,
             allowIn: allowIn
-          });
+          }));
         });
 
         // remove the hotkey if the directive is destroyed:
         el.bind('$destroy', function() {
-          angular.forEach(keys, hotkeys.del);
+          angular.forEach(keys, function (hotkey) {
+            if (hotkeys.get().indexOf(hotkey) > 0) {
+              hotkeys.del(hotkey);
+            }
+          });
         });
       }
     };
